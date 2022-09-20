@@ -16,3 +16,20 @@ VALUES ("Boris", 'm', DATE(NOW())),
 ("Dancho", "m", DATE(NOW())),
 ("Petar", "m", DATE(NOW())),
 ("Desi", "f", DATE(NOW()));
+
+
+CREATE TABLE `users` (
+`id` INT PRIMARY KEY AUTO_INCREMENT,
+`username` VARCHAR(30) NOT NULL,
+`password` VARCHAR(26) NOT NULL,
+`profile_picture` BLOB,
+`last_login_time` TIME,
+`is_deleted` BOOLEAN
+);
+INSERT INTO `users` (`username`, `password`) 
+    VALUES
+    ("pesho1", "1234"),
+    ("ivan2", "gotinsam"),
+    ("test1", "test1234"),
+    ("test2", "test123"),
+    ("test3", "test12");
