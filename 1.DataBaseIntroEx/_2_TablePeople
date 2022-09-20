@@ -33,3 +33,7 @@ INSERT INTO `users` (`username`, `password`)
     ("test1", "test1234"),
     ("test2", "test123"),
     ("test3", "test12");
+    
+    ALTER TABLE `users`
+DROP PRIMARY KEY,
+ADD PRIMARY KEY pk_users (`id`, `username`);
