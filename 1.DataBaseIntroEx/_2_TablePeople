@@ -40,3 +40,11 @@ MODIFY COLUMN `last_login_time` DATETIME DEFAULT NOW();
     ALTER TABLE `users`
 DROP PRIMARY KEY,
 ADD PRIMARY KEY pk_users (`id`, `username`);
+
+
+ALTER TABLE `users`
+DROP PRIMARY KEY,
+ADD CONSTRAINT pk_users
+PRIMARY KEY `users` (`id`),
+MODIFY COLUMN `username` VARCHAR (30) UNIQUE;
+
