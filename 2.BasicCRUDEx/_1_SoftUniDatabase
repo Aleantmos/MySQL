@@ -43,3 +43,7 @@ ORDER BY `salary` DESC;
 
 SELECT `first_name`, `last_name` FROM `employees`
 WHERE `department_id` != 4;
+
+CREATE VIEW `v_employees_salaries` AS
+SELECT `first_name`, `last_name`, `salary`
+FROM `employees`;
