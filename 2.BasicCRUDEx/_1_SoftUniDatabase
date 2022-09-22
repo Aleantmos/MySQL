@@ -47,3 +47,8 @@ WHERE `department_id` != 4;
 CREATE VIEW `v_employees_salaries` AS
 SELECT `first_name`, `last_name`, `salary`
 FROM `employees`;
+
+
+CREATE VIEW `v_employees_job_titles` AS
+SELECT CONCAT_WS(" ", `first_name`, `middle_name`, `last_name`) AS `full_name`, `job_title`
+FROM `employees`;
