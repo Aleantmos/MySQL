@@ -40,3 +40,6 @@ ORDER BY  `salary` DESC
 LIMIT 5;
 WHERE `salary` > 50000
 ORDER BY `salary` DESC;
+
+SELECT `first_name`, `last_name` FROM `employees`
+WHERE `department_id` != 4;
