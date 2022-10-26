@@ -1,1 +1,55 @@
 CREATE DATABASE `movies`;
+
+USE `movies`;
+
+CREATE TABLE `directors` (
+`id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+`director_name` VARCHAR(200) NOT NULL,
+`notes` TEXT);
+
+
+
+INSERT INTO `directors` (`director_name`, `notes`)
+VALUES ("Filip", "Pop Prikritie"),
+	("Miriana", "Eat"),
+    ("Bobi", "Hubavata Fikret"),
+    ("Baba Vanga", "Vanga"),
+    ("Tedi", "Fitnes");
+    
+CREATE TABLE `genres` (
+`id` INT PRIMARY KEY AUTO_INCREMENT,
+`genre_name` VARCHAR(200) NOT NULL,
+`notes` TEXT
+);
+
+INSERT `genres` (`genre_name`, `notes`) 
+VALUES ("action", "Action"),
+("comedy", "Comedy"),
+("podcast", "Podcast"),
+("music", "Music"),
+("drama", "Drama");
+
+CREATE TABLE `categories` (
+`id` INT PRIMARY KEY AUTO_INCREMENT,
+`category_name` VARCHAR(200) NOT NULL,
+`notes` TEXT
+);
+ 
+INSERT `categories` (`category_name`, `notes`)
+VALUES ("fun", "Friends"),
+("sad", "Titanic"),
+("weird", "Dr. Houes"),
+("fantasy", "LOTR"),
+("horror", "Creep");
+
+CREATE TABLE `movies` (
+`id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+`title` VARCHAR(200) NOT NULL,
+`director_id` INT NOT NULL,
+`copyright_year` INT NOT NULL,
+`length` INT NOT NULL,
+`genre_id` INT NOT NULL,
+`category_id` INT NOT NULL,
+`rating` INT,
+`notes` TEXT);
+
