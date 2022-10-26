@@ -1,0 +1,4 @@
+
+ADD CONSTRAINT pk_users
+PRIMARY KEY `users` (`id`),
+MODIFY COLUMN `username` VARCHAR (30) UNIQUE;
