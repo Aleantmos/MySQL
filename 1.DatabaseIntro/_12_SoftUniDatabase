@@ -1,0 +1,69 @@
+CREATE DATABASE `soft_uni`;
+
+USE `soft_uni`;
+
+CREATE TABLE `towns` (
+`id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
+`name` VARCHAR(50)
+);
+
+
+CREATE TABLE `adresses` (
+`id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+`adress_text` VARCHAR(50) NOT NULL,
+`town_id` INT,
+FOREIGN KEY (town_id) REFERENCES towns(id));
+
+CREATE TABLE `departments` (
+`id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+`name` VARCHAR(50) NOT NULL);
+
+#• employees (id, first_name, middle_name, last_name, job_title, department_id, hire_date, salary, address_id)
+CREATE TABLE `employees` (
+`id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+`first_name` VARCHAR(50) NOT NULL,
+`middle_name` VARCHAR(50) NOT NULL,
+`last_name` VARCHAR(50) NOT NULL,
+`job_title` VARCHAR(20),
+`department_id` INT NOT NULL,
+`hire_date` DATE,
+`salary` DECIMAL(7,2),
+`adress_id` INT,
+FOREIGN KEY (department_id) REFERENCES departments(id),
+FOREIGN KEY (adress_id) REFERENCES adresses(id));
+
+USE `soft_uni`;
+INSERT INTO `towns` (`name`)
+VALUES ("Sofia"), ("Plovdiv"), ("Varna"), ("Burgas");
+
+#Engineering, Sales, Marketing, Software Development, Quality Assurance
+INSERT INTO `departments` (`name`) 
+VALUES ("Engineering"), ("Sales"), ("Marketing"), ("Software Development"), ("Quality Assurance");
+
+
+INSERT INTO `employees` (`first_name`, `middle_name`, `last_name`, `job_title`, `department_id`, `hire_date`, `salary`)
+VALUES ("Ivan", "Ivanov", "Ivanov", ".NET Developer", 4, "2013/02/01", 3500.00),
+	("Petar", "Petrov", "Petrov", "Senior Engineering", 1, "2004/03/02", "525.25"),
+    ("Maria", "Petrova", "Ivanova", "Intern", 5, "2016/08/28", "525.25"),
+    ("Georgi", "Terziev", "Ivanov", "CEO Sales", 2, "2007/12/09", "3000.00"),
+    ("Peter", "Pan", "Pan", "Intern", 3, "2016/08/28", "599.88");
+
+USE `soft_uni`;
+SELECT * FROM `towns`;
+SELECT * FROM `departments`;
+SELECT * FROM `employees`;
+
+USE `soft_uni`;
+SELECT * FROM `towns` ORDER BY `name`;
+SELECT * FROM `departments` ORDER BY `name`;
+SELECT * FROM `employees` ORDER BY `salary` DESC;
+
+USE `soft_uni`;
+SELECT * FROM `towns` ORDER BY `name`;
+SELECT * FROM `departments` ORDER BY `name`;
+SELECT `first_name`, `last_name`, `job_title`, `salary` FROM `employees` ORDER BY `salary` DESC;
+
+
+USE `soft_uni`;
+UPDATE `employees` SET `salary` = `salary` * 1.1;
+SELECT `salary` FROM `employees`;
