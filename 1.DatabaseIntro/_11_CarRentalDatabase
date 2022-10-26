@@ -1,0 +1,83 @@
+CREATE DATABASE `car_rental`;
+
+USE `car_rental`;
+CREATE TABLE `categories` (
+`id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT, 
+`category` VARCHAR(200),
+`daily_rate` INT NOT NULL,
+`weekly_rate` INT NOT NULL,
+`monthly_rate` INT NOT NULL,
+`weekend_rate` INT NOT NULL);
+
+INSERT `categories` (`category`, `daily_rate`, `weekly_rate`, `monthly_rate`, `weekend_rate`)
+VALUES ("fun" , 2, 2, 3, 4), 
+	("horror", 1, 3,  3, 4);
+
+USE `car_rental`;
+CREATE TABLE `cars` (
+`id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+`plate_number` VARCHAR(10) NOT NULL,
+`make` VARCHAR(50) NOT NULL,
+`model` VARCHAR(50),
+`car_year` INT(4),
+`category_id` INT NOT NULL,
+`doors` INT(1),
+`pictures` BLOB,
+`car_condition` VARCHAR(50),
+`available` BOOLEAN NOT NULL);
+
+USE `car_rental`;
+INSERT INTO `cars` (`plate_number`, `make`, `model`, `car_year`, `category_id`, `doors`, `car_condition`, `available`)
+VALUES ("123", "BMW", "M5 F90", 2021, 3, 4, 3, TRUE);
+
+#employees (id, first_name, last_name, title, notes
+CREATE TABLE `employees` (
+`id` INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+`first_name` VARCHAR(50),
+`last_name` VARCHAR(50),
+`title` VARCHAR(50),
+`notes` TEXT);
+
+INSERT INTO `employees` (`first_name`, `last_name`, `title`, `notes`)
+VALUES ("Filip", "Mindev", "Village Idiot", "needs more PUSH");
+
+#customers (id, driver_licence_number, full_name, address, city, zip_code, notes
+
+CREATE TABLE `customers` (
+`id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+`driver_licence_number` INT NOT NULL,
+`full_name` VARCHAR(50) NOT NULL,
+`adress` VARCHAR(50), 
+`city` VARCHAR (20),
+`zip_code` INT (4),
+`notes` TEXT);
+
+INSERT INTO `customers` (`driver_licence_number`, `full_name`, `adress`, `city`, `zip_code`, `notes`)
+VALUES ("123", "Filip Mindev", "Center", "Sofia", 100, "WHAT?");
+
+#rental_orders (id, employee_id, customer_id, car_id, car_condition, tank_level, kilometrage_start, kilometrage_end, total_kilometrage, start_date, end_date, total_days, rate_applied, tax_rate, order_status, notes
+CREATE TABLE `rental_orders` (
+`id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+`employee_id` INT NOT NULL,
+`customer_id` INT NOT NULL,
+`car_id` INT NOT NULL,
+`car_condition` VARCHAR(50),
+`tank_level` INT NOT NULL,
+`kilometrage_start` DOUBLE,
+`kilometrage_end` DOUBLE,
+`total_kilometrage` DOUBLE,
+`start_date` DATE,
+`end_date` DATE,
+`total_days` INT NOT NULL,
+`rate_applied` INT NOT NULL,
+`tax_rate` DOUBLE,
+`order_status` BOOLEAN,
+`notes` TEXT);
+
+
+
+
+
+
+
+
