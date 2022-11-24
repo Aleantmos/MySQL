@@ -1,0 +1,30 @@
+use `camp`;
+-- 1. Mountains and Peaks
+
+create table `mountains` (
+`id` int primary key auto_increment not null,
+`name` varchar(200)
+);
+
+create table `peaks` (
+`id` int primary key auto_increment not null,
+`name` varchar(200),
+`mountain_id` int,
+constraint `fk_peaks_mountains`
+foreign key (`mountain_id`)
+references `mountains`(`id`)
+);
+
+-- 2. Trip Organization
+
+select `driver_id`, `vehicle_type`, concat_ws(" ", `first_name`, `last_name`) as `driver_name` 
+from `vehicles` 
+inner join `campers`
+on `vehicles`.`driver_id` = `campers`.`id`;
+
+-- 3. SoftUni Hiking
+select `starting_point`, `end_point`, `leader_id`, concat_ws(" ", `first_name`, `last_name`) as "leader_name"
+from `routes`
+inner join `campers`
+on `routes`.`leader_id` = `campers`.`id`;
+
