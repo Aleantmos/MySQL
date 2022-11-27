@@ -1,0 +1,40 @@
+-- 8. Employee 24
+use `soft_uni_join`;
+select e.`employee_id`, e.`first_name`, 
+case
+when date(p.`start_date`) <= 2004/12/31 then p.`name`
+else null
+end as `project_name`
+from `employees` as e
+join
+`employees_projects` as ep on e.`employee_id` = ep.`employee_id`
+join 
+`projects` as p on ep.`project_id` = p.`project_id`
+where e.`employee_id` = 24
+order by p.`name`;
+
+-- 9. Employee Manager
+select e.`employee_id`, e.`first_name`, e.`manager_id`, m.`first_name`
+from `employees`as e
+join `employees` as m on e.`manager_id` = m.`employee_id`
+where e.`manager_id` in (3, 7)
+order by e.`first_name`;
+
+-- 10. Employee Summary
+select e.`employee_id`, 
+concat(e.`first_name`, " ", e.`last_name`) as "employee_name",
+concat(m.`first_name`, " ", m.`last_name`) as "manager_name", 
+d.`name` as `department_name`
+from `employees` as e
+join `employees` as m on e.`manager_id` = m.`employee_id`
+join `departments` as d on e.`department_id` = d.`department_id`
+order by e.`employee_id`
+limit 5;
+
+
+-- 11. Min Average Salary
+select avg(`salary`) as "min_average_salary"
+from `employees` 
+group by `department_id`
+order by `min_average_salary` 
+limit 1;
