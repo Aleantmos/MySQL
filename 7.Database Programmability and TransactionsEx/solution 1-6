@@ -48,3 +48,31 @@ order by `first_name`, `last_name`, `employee_id`;
 end $$
 
 delimiter ;
+
+-- 5. Salary Level Function
+
+delimiter $$
+create function ufn_get_salary_level(salary decimal(19, 4))
+returns varchar(8)
+deterministic
+begin 
+declare `salary_level` varchar(8);
+if `salary` < 30000 then set `salary_level` := "Low";
+elseif `salary` <= 50000 then set `salary_leve` := "Average";
+else set `salary_level` := "High";
+end if;
+return `salary_level`;
+end $$
+
+delimiter ;
+
+-- 6. Employees by Salary Level
+
+delimiter $$
+create procedure usp_get_employees_by_salary_level(salary_level varchar(8)) 
+begin
+select `first_name`, `last_name` from `employees`
+where ufn_get_salary_level(salary) like `salary_level`
+order by `first_name` desc, `last_name` desc;
+end $$
+delimiter ;
