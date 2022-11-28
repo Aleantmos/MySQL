@@ -23,3 +23,28 @@ where `salary` >= `desired_salary`
 order by `first_name`, `last_name`, `employee_id`;
 end $$
 delimiter ;
+
+-- 3. Town Names Starting With
+
+delimiter $$
+create procedure usp_get_towns_starting_with(letter char)
+begin 
+select `name` from `towns`
+where substring(`name`, 2) = letter
+order by `town_name`;
+end $$
+delimiter ;
+
+-- 4. Employees from Town
+
+delimiter $$
+create procedure usp_get_employees_from_town(`town_param` varchar(50))
+begin
+select `first_name`, `last_name` from `employees` as e
+join `addresses` as a using (`address_id`)
+join  `towns` as t using (`town_id`)
+where t.`name` = `town_param`
+order by `first_name`, `last_name`, `employee_id`;
+end $$
+
+delimiter ;
