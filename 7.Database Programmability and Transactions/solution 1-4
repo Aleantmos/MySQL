@@ -1,0 +1,69 @@
+use `soft_uni_functions`;
+
+-- 1. Count Employees by Town
+delimiter $$
+
+create function `ufn_employees_by_town`(town_name varchar(20))
+returns int
+deterministic
+begin 
+declare e_count int;
+set e_count := (
+select count(`employee_id`)
+from `employees`
+join addresses using (`address_id`)
+join towns as t using (`town_id`)
+where t.`name` = town_name
+);
+return e_count;
+end$$
+
+delimiter ;
+
+select `ufn_employees_by_town`("Sofia");
+
+-- 02. Employees Promotion
+delimiter $$
+create procedure usp_raise_salaries (department_name varchar(50))
+begin 
+update `employees` as e join `departments` as d
+on e.`deparment_id` = d.`department_id`
+set salary = salary * 1.05
+where d.`name` = department_name;
+end
+$$
+
+-- 3. Employees Promotion by ID
+
+create procedure usp_raise_salary_by_id (id int)
+begin 
+start transaction;
+if ((select count(employee_id) from employee where employee_id = id) <> 1) 
+then rollback;
+else 
+update employees
+set salary = salary * 1.05
+where employee_id = id;
+end if;
+end;
+
+-- 4. Triggered
+
+create table deleted_employees(
+employee_id int primary key auto_increment,
+`first_name` varchar(50) not null,
+`last_name` varchar(50),
+`middle_name` varchar(50),
+`job_title` varchar(50),
+`department_id` int default null,
+`salary` deicmal(19,4)
+);
+
+create trigger tr_deleted_employees
+after delete 
+on employees
+for each row 
+begin
+insert into deleted_employees(first_name, last_name, middle_name, job_title, department_id, salary)
+values (old.`first_name`, old.`last_name`, old.`middle_name`, old.`job_title`, old.`department_id`, old.`salary`);
+end
