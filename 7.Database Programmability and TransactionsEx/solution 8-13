@@ -1,0 +1,89 @@
+use `soft_uni_programmability`;
+
+-- 8. Find Full Name
+
+delimiter $$
+create procedure usp_get_holders_full_name()
+begin
+select concat(`first_name`, " ", `last_name`) as `full_name`
+from `account_holders`
+order by `full_name`, `id`;
+end $$
+
+delimiter ;
+
+-- 9. People with Balance Higher Than
+delimiter $$
+create procedure us_get_holders_with_balance_higher_than(ammount decimal(12,4))
+begin 
+select `first_name`, `last_name` from `account_holders` ah
+left join `accounts` as a 
+on a.`account_holder_id` = a.`id` 
+group by `first_name`, `last_name`
+having sum(a.`balance`) > ammount
+order by a.`account_holder_id`;
+end $$
+delimiter ;
+
+-- 10. Future Value Function
+delimiter $$
+
+create function ufn_calculate_future_value(sum decimal(19,4), yearly_interest double, years int)
+returns decimal(19,4)
+deterministic 
+begin 
+declare future_sum decimal(19,4);
+set future_sum := sum * pow(1 + yearly_interest, years);
+return future_sum;
+end $$
+
+delimiter ;
+
+-- 11. Calculating Interest
+
+delimiter $$
+create procedure usp_calculate_future_value_for_account(id int, interest_rate decimal(19,4))
+begin 
+select ah.`id` as "account_id", ah.`first_name` as "first name", ah.`last_name` as "last name", a.`balance` as "current balance",
+ufn_calculate_future_value(a.`balance`, interest_rate, 5) as "balance_in_5_years"
+from `account_holders` as ah
+join `accounts` as a on a.`account_holder_id` = ah.`id`
+where a.`id` = id;
+end $$
+delimiter ;
+
+-- 12. Deposit Money
+
+delimiter $$
+create procedure usp_deposit_money(account_id int, money_amount decimal(19,4))
+start transaction;
+if(money_amount <= 0) then
+rollback;
+else 
+update `accounts` as a
+set a.`balance` = a.`balance` + money_amount
+where a.`id` = account_id;
+end if;
+end $$
+
+
+-- 13. Withdraw Money
+
+$$
+create procedure usp_withdraw_money(account_id int, money_amount decimal(19,4))
+begin
+start transaction;
+if(money_amount <= 0 
+or 
+(select `balance` from `accounts` as a
+where a.`id` = account_id) < money_amount)
+then rollback;
+else 
+update `accounts` as a
+set a.`balance` = a.`balance` - money_amount
+where a.`id` = account_id;
+commit;
+end if;
+end$$
+
+
