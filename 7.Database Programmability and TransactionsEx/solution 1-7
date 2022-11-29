@@ -76,3 +76,14 @@ where ufn_get_salary_level(salary) like `salary_level`
 order by `first_name` desc, `last_name` desc;
 end $$
 delimiter ;
+
+-- 7. Define Function
+
+delimiter $$
+create function ufn_is_word_comprised(set_of_letters varchar(50), word varchar(50))
+returns int
+deterministic 
+begin 
+return word regexp (concat('^[', set_of_letters, ']+$'));
+end $$
+delimiter ;
