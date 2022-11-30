@@ -1,0 +1,118 @@
+use `softuni_imbd`;
+ 
+ 
+-- 02.Insert
+
+insert into `actors` (`first_name`, `last_name`, `birthdate`, height, `awards`, `country_id`)
+select 
+reverse(`first_name`),
+reverse(`last_name`),
+date_sub(`birthdate`, interval 2 day),
+`height` + 10,
+`country_id`,
+(select id from countries where `name` like "Armenia")
+from `actors`
+where `id` <= 10;
+ 
+ -- 03.Update
+ 
+update `movies_additional_info` as mai
+set `runtime` = 
+case 
+when `runtime` - 10 < 0
+then 0
+else runtime - 10
+end
+where mai.`id` >= 15 and
+mai.`id` <= 25;
+
+-- 04.Delete
+delete c from `countries` as c
+left join movies as m
+on c.`id` = m.`country_id`
+where m.`country_id` is null;
+
+-- 05.Countries
+select `id`, `name`, `continent`, `currency`
+from `countries`
+order by `currency` desc, `id`;
+
+-- 06.OldMovies
+select m.`id`, m.`title`, mai.`runtime`, mai.`budget`, mai.`release_date`
+from `movies` as m
+right join `movies_additional_info` as mai
+on m.`movie_info_id` = mai.`id`
+where year(`release_date`) between 1996 and 1999
+order by mai.`runtime`, m.`id`
+limit 20;
+
+-- 07.MovieCasting
+
+select concat(`first_name`, " ",`last_name`) as "full_name",
+concat(reverse(`last_name`), length(`last_name`), "@cast.com") as "email",
+2022 - year(`birthdate`) as age, `height`
+from actors as a
+left join `movies_actors`as m 
+on a.`id` = m.`actor_id`
+where m.`actor_id` is null
+order by `height`;
+
+-- 08.InternationalFestival
+ 
+select c.`name`, count(m.`id`) as `movies_count`
+from `countries` as c
+left join `movies` as m
+on m.`country_id` = c.`id`
+group by c.`name`
+having `movies_count` >= 7
+order by c.`name` desc;
+
+-- 09.RatingSystem
+
+select m.`title`,
+case
+when mai.`rating` <= 4 then "poor"
+when mai.`rating` <= 7 then "good"
+else "excellent"
+end as "rating",
+if (mai.`has_subtitles`, "english", "-") as "subtitles",
+mai.`budget`
+from `movies` as m
+join `movies_additional_info` as mai using(`id`)
+order by mai.`budget` desc;
+
+-- 10.HistoryMovies
+delimiter $$
+create function udf_actor_history_movies_count(full_name varchar(50))
+returns int 
+deterministic 
+begin
+declare history_movies int;
+set history_movies := (
+select count(ma.`movie_id`)
+from `movies_actors` as ma
+join `actors` as a
+on ma.`actor_id` = a.`id`
+join `genres_movies` as g
+on gm.`movie_id` = ma.`movie_id`
+join  `genres` as g
+on gm.`genre_id` = g.`id`
+where concat(a.`first_name`, " ", a.`last_name`) = full_name and g.`name` = "History"
+group by ma.`actor_id`
+);
+return history_movies;
+end
+$$
+
+-- 11.	Movie awards
+delimiter $$
+create procedure udp_award_movie(movie_title varchar(50))
+begin 
+update actors as a
+join movies_actors as ma
+on ma.`movie_id` = m.`id`
+set a.`awards` = a.`awards` + 1
+where m.`title` = movie_title; 
+end$$
+
+
