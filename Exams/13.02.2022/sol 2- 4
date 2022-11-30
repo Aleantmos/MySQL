@@ -1,0 +1,20 @@
+-- 02.INSERT
+
+insert into `reviews` (`content`, `rating`, `picture_url`, `published_at`) 
+select  left(p.`description`, 15), p.`price`/8, reversed(p.`name`), date("2010/10/10")
+from `products` as p
+where p.`id` >= 5;
+
+-- 03.UPDATE
+
+update `products` as p
+set p.`quantity` = p.`quantity` - 5
+where p.`quantity` between 60 and 70;
+
+-- 04.DELETE
+
+delete c from `customers` as c
+left join `orders`as o
+on o.`customer_id` = c.`id`
+where o.`id` is null;
+
