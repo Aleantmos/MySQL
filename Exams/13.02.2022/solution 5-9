@@ -1,0 +1,43 @@
+-- 05.Categories
+
+select `id`, `name` 
+from `categories`
+order by `name` desc;
+
+-- 06.Quantity
+select p.`id`, b.`id` as "brand_id", p.`name`, p.`quantity_in_stock`
+from `products` as p
+left join `brands` as b
+on p.`brand_id` = b.`id`
+where p.`price` > 1000 and p.`quantity_in_stock` < 30
+order by p.`quantity_in_stock`, p.`id`;
+
+-- 07.Review
+
+select `id`, `content`, `rating`, `picture_url`, `published_at`
+from `reviews`
+where left(content, 2) = "My" and length(content) > 61
+order by `rating` desc;
+
+-- 08.FirstCustomer
+
+select concat(c.`first_name`, " ", c.`last_name`) as `full_name`,
+c.`address`, o.`order_datetime` as "order_date"
+from `customers` as c
+left join `orders` as o
+on o.`customer_id` = c.`id`
+where year(o.`order_datetime`) <= 2018
+order by `full_name` desc;
+
+-- 09.BestCategories
+
+select count(p.`category_id`) as `items_count`, c.`name`, 
+sum(p.`quantity_in_stock`) as `total_quantity`
+from `categories` as c
+left join `products` as p
+on c.`id` = p.`category_id`
+group by c.`name`
+order by `items_count` desc, `total_quantity`
+limit 5;
+
+
