@@ -1,0 +1,52 @@
+
+-- 10.FindAllBasicInfoForGame
+delimiter $$
+
+create function udf_game_info_by_name (game_name VARCHAR (20))
+returns varchar(500)
+deterministic
+begin
+
+declare `team_name` varchar(40);
+declare `address_text` varchar(50);
+declare `message` varchar (1000);
+
+
+set `team_name` := (select t.`name`
+from `teams` as t
+join `games` as g
+on g.`team_id` = t.`id`
+where g.`name` = game_name
+);
+
+set `address_text` := (
+select a.`name`
+from `addresses` as a
+join `offices` as o
+on a.`id` = o.`address_id`
+join `teams` as t
+on t.`office_id` = o.`id`
+where t.`name` = `team_name`
+);
+
+set `message` := concat_ws(' ', 'The', game_name, 
+    'is developed by a',`team_name`, 'in an office with an address', `address_text`);
+return `message`;
+end 
+$$
+
+-- 11.	UpdateBudget
+delimiter $$
+
+create procedure udp_update_budget (min_game_rating float)
+begin 
+update `games` as g
+left join `games_categories` as c
+on g.`id` = c.`game_id`
+set g.`budget` = g.`budget` + 100000 and
+year(g.`release_date`) = year(g.`release_date`) + 1
+where c.`category_id` is null
+and g.`release_date` is null
+and  g.`rating` > min_game_rating;
+end
+$$
