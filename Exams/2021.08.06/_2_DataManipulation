@@ -1,0 +1,23 @@
+-- 02.Insert
+
+insert into `games` (`name`, `rating`, `budget`, `team_id`)
+select lower(reverse(substring((t.`name`), 2))), t.`id`, t.`leader_id` * 1000, t.`id`
+from teams as t
+where t.`id` between 1 and 9;
+
+-- 03.Update
+
+update `employees` as e
+left join `teams` as t 
+on e.`id` = t.`leader_id`
+set `salary` = `salary` + 1000
+where `age` < 40 and `salary` < 5000 
+and t.`id` is not null;
+
+-- 04.Delete
+
+delete g from `games` as g
+left join `games_categories` as gc
+on g.`id` = gc.`game_id`
+where gc.`game_id` is null 
+and g.`release_date` is null;
