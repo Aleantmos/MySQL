@@ -1,0 +1,71 @@
+-- 05.Employees
+
+select `first_name`, `last_name`, `age`, `salary`, `happiness_level`
+from `employees`
+order by `salary`, `id`;
+
+-- 06.AddressesOfTeams
+
+select t.`name` as `team_name`, a.`name` as `address_name`, length(a.`name`) as `count_of_characters`
+from `teams` as t
+join `offices`as o 
+on t.`office_id` = o.`id`
+join `addresses` as a 
+on o.`address_id` = a.`id`
+where o.`website` is not null
+order by `team_name`, `address_name`;
+
+-- 07.CategoriesInfo
+
+select c.`name`, count(g.`id`) as `games_count`,
+round(avg(g.`budget`),2) as `avg_budget`, max(g.`rating`) as `max_rating`
+from `categories` as c
+join `games_categories` as gc
+on gc.`category_id` = c.`id`
+join `games` as g
+on g.`id` = gc.`game_id`
+group by c.`name`
+having `max_rating` >= 9.5
+order by `games_count` desc, c.`name`;
+
+-- 8.Games2022
+
+select g.`name`,
+g.`release_date`,
+concat(left(g.`description`, 10), "...") as "summary",
+case 
+when month(g.`release_date`) between 1 and 3 then "Q1"
+when month(g.`release_date`) between 4 and 6 then "Q2"
+when month(g.`release_date`) between 7 and 9 then "Q3"
+else "Q4"
+end as "qaurter",
+t.`name`
+from `games`as g
+join `teams` as t
+on g.`team_id` = t.`id`
+where right(g.`name`, 1) = "2"
+and year(g.`release_date`) = 2022
+and month(g.`release_date`) % 2 = 0
+order by `quarter`;
+
+-- 09.FullInfo
+
+select g.`name`,
+case 
+when (g.`budget`) < 50000 then "Normal budget"
+else "Insufficient budget"
+end as `budget_level`,
+t.`name`,
+a.`name`
+from `games` as g
+join `teams`as t
+on g.`team_id` = t.`id`
+join `offices` as o
+on o.`id` = t.`id`
+join `addresses` as a
+on a.`id` = o.`address_id`
+left join `games_categories` as gc
+on g.`id` = gc.`game_id`
+where g.`release_date` is null
+and gc.`category_id` is null
+order by g.`name`;
