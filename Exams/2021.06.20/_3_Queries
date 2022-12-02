@@ -1,0 +1,65 @@
+-- 05.Cars
+
+select `make`, `model`, `condition`
+from `cars`
+order by `id`;
+
+-- 06.DriversCars
+
+select d.`first_name`, d.`last_name`, c.`make`, c.`model`, c.`mileage`
+from `drivers` as d
+join `cars_drivers` as cd
+on cd.`driver_id` = d.`id`
+join `cars` as c
+on c.`id` = cd.`car_id`
+where c.`mileage` is not null
+order by c.`mileage` desc, d.`first_name`;
+
+-- 07.NumberOfCoursesForEachCar
+
+select ca.`id` as `car_id`, 
+ca.`make`, 
+ca.`mileage`, 
+count(co.`id`) as `count_of_courses`, 
+round(avg(co.`bill`), 2) as `avg_bill`
+from `cars` as ca
+left join `courses` co
+on co.`car_id` = ca.`id`
+group by ca.`id`
+having `count_of_courses` != 2
+order by `count_of_courses` desc, ca.`id`;
+ 
+
+-- 8.RegularClients
+
+select cl.`full_name`, 
+count(co.`id`) as `count_of_cars`, 
+sum(co.`bill`) as `total_sum`
+from clients as cl
+join `courses` as co
+on cl.`id` = co.`client_id`
+group by cl.`id`
+having `count_of_cars` > 1
+and substring(cl.`full_name`,2,1) = "a"
+order by cl.`full_name`;
+
+
+-- 09.FullInformationOfCourses
+
+select a.`name`,
+if(hour(co.`start`) between 6 and 20, "Day", "Night"),
+co.`bill`,
+cl.`full_name`,
+`cars`.`make`,
+`cars`.`model`,
+ca.`name`
+from `courses` as co
+join `addresses` as a
+on a.`id` = co.`from_address_id`
+join `clients` as cl
+on cl.`id` = co.`client_id`
+join `cars` 
+on `cars`.`id` = co.`car_id`
+join `categories` as ca
+on ca.`id` = `cars`.`category_id`
+order by co.`id`;
