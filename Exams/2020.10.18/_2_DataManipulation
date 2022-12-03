@@ -1,0 +1,24 @@
+-- 2.Insert
+
+insert into `products_stores` (`product_id`, `store_id`)
+select `id`, 1
+from `products` as p
+left join `products_stores` as ps
+on p.`id` = ps.`product_id`
+where ps.`store_id` is null; 
+
+
+-- 3.Update
+
+update `employees`
+set `salary` = `salary` - 500, 
+`manager_id` = 3
+where year(`hire_date`) > 2003
+and `store_id` != "5" 
+and `store_id` != "14"; 
+
+-- 4.Delete
+
+delete e from `employees` as e
+where `manager_id` is not null
+and `salary` >= 6000;
