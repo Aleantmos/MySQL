@@ -1,0 +1,23 @@
+-- 05.Users
+
+select `username`, `gender`, `age` 
+from `users`
+order by `age` desc, `username`;
+
+-- 06.Extract 5 Most Commented Photos
+select p.`id`, p.`date` as `date_and_time`,
+`description`, count(c.`photo_id`) as `commentsCount`
+from `photos` as p
+join `comments` as c
+on p.`id` = c.`photo_id`
+group by p.`id`
+order by `commentsCount` desc, p.`id`
+limit 5;
+
+-- 07.Lucky Users
+select concat(u.`id`, " ", u.`username`), `email`
+from `users` as u
+join `users_photos` as up
+on u.`id` = up.`user_id`
+where up.`photo_id` = u.`id`
+order by u.`id`;
