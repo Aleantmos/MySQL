@@ -1,0 +1,60 @@
+
+
+-- 5.Querying
+select `first_name`, `middle_name`, `last_name`, `salary`, `hire_date`
+from `employees`
+order by `hire_date` desc;
+
+-- 6.Products with old pictures
+select p.`name`, p.`price`, p.`best_before`, concat(substring(p.`description`,1,10), "..."), pic.`url`
+from `products` as p 
+left join `pictures` as pic
+on pic.`id` = p.`picture_id`
+where length(p.`description`) > 100
+and year(pic.`added_on`) < 2019
+and p.`price` > 20
+order by p.`price` desc;
+
+-- 7.Counts of products in stores and their average 
+
+select s.`name`, count(ps.`product_id`) as `product_count`, round(avg(p.`price`), 2) as `avg`
+from `stores` as s
+left join `products_stores` as ps
+on s.`id` = ps.`store_id`
+left join `products` as p
+on ps.`product_id` = p.`id`
+group by s.`id`
+order by `product_count` desc, `avg` desc, s.`id`;
+
+
+-- 8.Specific employee
+
+select concat(e.`first_name`, " ", e.`last_name`) as `Full_name`, 
+s.`name` as `Store_name`,
+a.`name`,
+e.`salary`
+from `employees` as e
+join `stores` as s
+on e.`store_id` = s.`id`
+join `addresses` as a
+on a.`id` = s.`address_id`
+where e.`salary` < 4000
+and a.`name` like "%5%"
+and length(s.`name`) > 8
+and right(e.`last_name`, 1) = "n";
+
+-- 9.Find all information of stores
+select reverse(s.`name`) as `reversed_name`, 
+concat(upper(t.`name`), "-", a.`name`) as `full_address`, 
+count(e.`store_id`) as `employees_count`
+from `stores` as s
+join `employees`as e
+on s.`id` = e.`store_id`
+left join `addresses` as a
+on a.`id` = s.`address_id`
+join `towns` as t
+on t.`id` = a.`town_id`
+group by s.`id`
+having `employees_count` >= 1
+order by `full_address`;
+
