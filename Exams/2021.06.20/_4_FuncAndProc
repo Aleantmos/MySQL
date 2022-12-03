@@ -1,0 +1,50 @@
+
+
+-- 10.	Find all courses by client’s phone number
+delimiter $$
+create function udf_courses_by_client (phone_num VARCHAR (20))
+returns int
+deterministic
+begin
+declare courses_count int;
+set courses_count := (
+select count(co.`client_id`) 
+from courses as co
+right join `clients` as cl
+on cl.`id` = co.`client_id`
+where cl.`phone_number` = phone_num
+);
+return courses_count;
+end
+$$
+
+-- 11.	Full info for address
+
+create procedure udp_courses_by_address(address_name varchar(100))
+begin 
+select a.`name`, 
+cl.`full_name`,
+case
+when (co.`bill`) <= 20 then "Low"
+when (co.`bill`) <= 30 then "Medium"
+else "high"
+end as `level_of_bill`,
+ca.`make`,
+ca.`condition`,
+cat.`name` as `cat_name`
+from `clients` as cl
+left join `courses`as co
+on cl.`id` = co.`client_id`
+join `addresses` as a
+on a.`id` = co.`from_address_id`
+join `cars` as ca
+on ca.`id` = co.`car_id`
+left join `categories` as cat
+on cat.`id` = ca.`category_id`
+where a.`name` = address_name
+order by ca.`make`, cl.`full_name`;
+end $$
+
+
+
+ 
