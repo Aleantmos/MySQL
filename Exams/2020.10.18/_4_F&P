@@ -1,0 +1,50 @@
+
+
+-- 10.	Find full name of top paid employee by store name
+delimiter $$
+create function udf_top_paid_employee_by_store(store_name VARCHAR(50)) 
+returns varchar(200)
+deterministic
+begin
+
+declare `employee_name` varchar(100);
+declare `years_experience` int;
+declare `output` varchar(200);
+
+set `employee_name` := (
+select concat_ws(" ", e.`first_name`, e.`middle_name`,".", e.`last_name`) as `full_name`
+from `employees`as e
+join `stores` as s
+on s.`id` = e.`store_id`
+where s.`name` = store_name
+order by e.`salary` desc
+limit 1);
+
+set `years_experience` := (
+select floor(DATEDIFF("2020-10-18", e.`hire_date`)/365)
+from `employees` as e
+join `stores` as s
+on s.`id` = e.`store_id`
+where s.`name` = store_name
+order by e.`salary` desc
+limit 1);
+
+set output := concat_ws(' ', `employee_name`, 'works in store for', `years_experience`, 'years');
+return output;
+end $$
+
+-- 11.Update product price by address
+
+create procedure udp_update_product_price (address_name VARCHAR (50))
+begin
+update `product` as p
+join `products_stores` as ps
+on ps.`product_id` = p.`id`
+join `stores` as s
+on ps.`store_id` = s.`id`
+join `addresses` as a
+on s.`addresses_id` = a.`id`
+set p.`price` = if (left(`address_name`, 1) = "0", p.`price` + 100, p.`price` + 200)
+where a.`name` = address_name;
+end
+ 
