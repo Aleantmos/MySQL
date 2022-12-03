@@ -1,0 +1,23 @@
+
+-- 02.Insert
+
+insert into `addresses` (`address`, `town`, `country`, `user_id`)
+select `username`, `password`, `ip`, `age`
+from `users`
+where `gender` = "M";
+
+-- 03.Update
+
+update `addresses` 
+set `country` = (
+case 
+when left(`country`,1) = "B" then "Blocked"
+when left(`country`,1) = "T" then "Test"
+when left(`country`,1) = "P" then "In Progress"
+else `country`
+end
+);
+
+-- 04.Delete
+delete from `addresses`
+where `id` % 3 = 0;
