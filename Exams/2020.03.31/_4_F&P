@@ -1,0 +1,29 @@
+-- 10.Get User’s Photos Count
+delimiter $$
+create function udf_users_photos_count(username VARCHAR(30))
+returns int
+deterministic
+begin
+declare `photos_count` int;
+set `photos_count` := (
+select count(up.`photo_id`)
+from `users_photos` as up
+right join `users` as u
+on u.`id` = up.`user_id`
+where u.`username` = username);
+return `photos_count`; 
+end $$
+
+SELECT udf_users_photos_count('ssantryd') AS photosCount;
+
+
+-- 11.Increase User Age
+create procedure udp_modify_user(address VARCHAR(30), town VARCHAR(30)) 
+begin
+update `users` as u
+join `addresses` as a
+on a.`user_id` = u.`id`
+set `age` = `age` + 10
+where a.`town` = town
+and a.`address` = address;
+end;
