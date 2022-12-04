@@ -21,3 +21,25 @@ join `users_photos` as up
 on u.`id` = up.`user_id`
 where up.`photo_id` = u.`id`
 order by u.`id`;
+
+-- 08.CountLikesAndComments
+
+select p.`id`,
+(select count(`id`)
+from `likes`
+where `photo_id` = p.`id`) as `likes_count`,
+(select count(`id`)
+from `comments`
+where `photo_id` = p.`id`) as `comments_count`
+from `photos` as p
+order by `likes_count` desc, `comments_count` desc, p.`id`;
+
+
+
+-- 09.The Photo on the Tenth Day of the Month
+
+select concat(substring(`description`, 1, 30), "...") as `summary`, 
+`date`
+from `photos`
+where day(`date`) = 10
+order by `date` desc;
