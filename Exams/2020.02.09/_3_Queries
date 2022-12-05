@@ -1,0 +1,60 @@
+-- 05.Players
+select `first_name`, `age`, `salary`
+from `players` 
+order by `salary` desc;
+
+-- 06. Young offense players without contract
+
+select p.`id`, concat(p.`first_name`," ", p.`last_name`) as `full_name`, 
+p.`age`, p.`position`, p.`hire_date`
+from `players` as p
+left join `skills_data` as sd
+on p.`skills_data_id` = sd.`id`
+where p.`hire_date` is null 
+and p.`position` = "A"
+and sd.`strength` > 50
+order by `salary`, `age`;
+
+-- 07. Detail info for all teams
+
+select t.`name`, t.`established`, t.`fan_base`, count(p.`team_id`) as `players_count`
+from `teams` as t
+left join `players` as p
+on p.`team_id` = t.`id`
+group by t.`id`
+order by `players_count` desc, `fan_base` desc;
+
+-- 8.The fastest player by towns
+
+select max(sd.`speed`) as `max_speed`, t.`name`
+from `towns` as t
+left join `stadiums` s
+on s.`town_id` = t.`id`
+left join `teams` te
+on te.`stadium_id` = s.`id`
+left join `players` p 
+on p.`team_id` = te.`id`
+left join `skills_data` as sd
+on p.`skills_data_id` = sd.`id`
+where te.`name` != "Devify"
+group by t.`name`
+order by `max_speed` desc,
+t.`name`;  
+
+-- 9.Total salaries and players by country
+
+select c.`name`,
+count(p.`team_id`) as `total_count_of_players`, 
+sum(p.`salary`) as `total_sum_of_salaries`
+from `countries` as c
+left join `towns` as t
+on t.`country_id` = c.`id`
+left join `stadiums` as s
+on s.`town_id` = t.`id`
+left join `teams` as te
+on te.`stadium_id` = s.`id`
+left join `players`as p
+on p.`team_id` = te.`id`
+group by c.`name`
+order by `total_count_of_players` desc,
+c.`name`;
